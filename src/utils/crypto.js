@@ -1,9 +1,10 @@
 // ==========================================================================
-// Taffy POS - Utilidades Criptográficas (Hash de Contraseñas y PINs)
+// Coffee´s Pos - Utilidades Criptográficas (Hash de Contraseñas y PINs)
 // Implementación síncrona compatible con Navegador, Electron (file://) y Node
 // ==========================================================================
 
-const HASH_PREFIX = '$taffy$v1$';
+const HASH_PREFIX = '$coffeespos$v1$';
+const LEGACY_HASH_PREFIX = '$taffy$v1$';
 const ITERATIONS = 1024;
 
 // Constantes estándar FIPS 180-4 para SHA-256
@@ -102,7 +103,7 @@ export function sha256Hex(asciiInput) {
 // Comprueba si un valor ya se encuentra hasheado
 export function isHashed(value) {
   if (!value || typeof value !== 'string') return false;
-  return value.startsWith(HASH_PREFIX) || value.startsWith('$taffy$scrypt$');
+  return value.startsWith(HASH_PREFIX) || value.startsWith(LEGACY_HASH_PREFIX) || value.startsWith('$coffeespos$scrypt$') || value.startsWith('$taffy$scrypt$');
 }
 
 // Comparación en tiempo constante para evitar ataques de timing
@@ -123,7 +124,7 @@ export function hashSecret(plainText, contextSalt = 'default') {
   if (!raw) return '';
   if (isHashed(raw)) return raw;
 
-  const cleanSalt = sha256Hex(`taffy_salt_v1:${String(contextSalt).trim().toLowerCase()}`).slice(0, 24);
+  const cleanSalt = sha256Hex(`coffees_salt_v1:${String(contextSalt).trim().toLowerCase()}`).slice(0, 24);
   let digest = sha256Hex(`${cleanSalt}:${raw}`);
   for (let i = 0; i < ITERATIONS; i++) {
     digest = sha256Hex(`${digest}:${cleanSalt}:${raw}:${i}`);
@@ -142,15 +143,19 @@ export function verifySecret(plainText, storedValue, contextSalt = 'default') {
     return constantTimeEqual(candidate, stored);
   }
 
-  if (stored.startsWith(HASH_PREFIX)) {
-    const parts = stored.slice(HASH_PREFIX.length).split('$');
+  const prefix = stored.startsWith(HASH_PREFIX)
+    ? HASH_PREFIX
+    : (stored.startsWith(LEGACY_HASH_PREFIX) ? LEGACY_HASH_PREFIX : null);
+
+  if (prefix) {
+    const parts = stored.slice(prefix.length).split('$');
     if (parts.length !== 2) return false;
     const [salt] = parts;
     let digest = sha256Hex(`${salt}:${candidate}`);
     for (let i = 0; i < ITERATIONS; i++) {
       digest = sha256Hex(`${digest}:${salt}:${candidate}:${i}`);
     }
-    const expected = `${HASH_PREFIX}${salt}$${digest}`;
+    const expected = `${prefix}${salt}$${digest}`;
     return constantTimeEqual(expected, stored);
   }
 

@@ -34,7 +34,7 @@ export default function ToastNotification({ toast, onDismiss }) {
         fontSize: '0.95rem',
         fontWeight: 600,
         maxWidth: '92vw',
-        animation: 'taffyFadeUp 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+        animation: 'coffeesFadeUp 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
         pointerEvents: 'auto',
         userSelect: 'none',
         cursor: 'pointer',

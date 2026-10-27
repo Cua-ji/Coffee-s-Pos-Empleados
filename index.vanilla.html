@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="description" content="Taffy POS - Sistema minimalista de punto de venta y toma de órdenes para tablet y computadora">
+  <meta name="description" content="Coffee´s Pos - Sistema minimalista de punto de venta y toma de órdenes para tablet y computadora">
   <meta name="theme-color" content="#ffffff">
-  <title>Taffy POS</title>
+  <title>Coffee´s Pos</title>
 
   <!-- Google Fonts: Outfit e Inter para estética ultra limpia y moderna -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,9 @@
       var idScreen = document.getElementById('screen-employee-id');
       if (welcome) welcome.classList.remove('active');
       if (idScreen) idScreen.classList.add('active');
-      if (typeof window.startTaffyPos === 'function') {
+      if (typeof window.startCoffeesPos === 'function') {
+        window.startCoffeesPos();
+      } else if (typeof window.startTaffyPos === 'function') {
         window.startTaffyPos();
       }
     }
@@ -35,7 +37,7 @@
     <section id="screen-welcome" class="screen-view active" aria-label="Pantalla de Bienvenida">
       <div class="welcome-left">
         <div class="welcome-title-wrap">
-          <h1 class="welcome-app-name" id="main-brand-title">Taffy pos</h1>
+          <h1 class="welcome-app-name" id="main-brand-title">Coffee´s Pos</h1>
           <p class="welcome-subtitle">Toma de Órdenes</p>
         </div>
 
@@ -200,7 +202,7 @@
       <!-- Barra Superior -->
       <nav class="pos-top-nav">
         <div class="pos-nav-left">
-          <span class="pos-logo-text">Taffy pos</span>
+          <span class="pos-logo-text">Coffee´s Pos</span>
           
           <!-- Pestañas de Navegación de Vistas -->
           <div class="pos-view-tabs" role="tablist">
@@ -479,7 +481,7 @@
         </div>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           <p style="font-size: 0.95rem; color: #475569;">
-            <strong>Taffy POS</strong> está optimizado para pantallas táctiles (tablets iPad, Android) y computadoras de escritorio con teclado numérico.
+            <strong>Coffee´s Pos</strong> está optimizado para pantallas táctiles (tablets iPad, Android) y computadoras de escritorio con teclado numérico.
           </p>
 
           <button type="button" class="btn-confirm-action" id="btn-toggle-fullscreen" style="background:#2563eb;">

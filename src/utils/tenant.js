@@ -1,16 +1,18 @@
 // ==========================================================================
-// Gestor de Tenant / Cuenta para Taffy POS
+// Gestor de Tenant / Cuenta para Coffee´s Pos
 // Aísla estrictamente los datos (empleados, menú, ventas) por cuenta registrada
 // ==========================================================================
 
 import { hashAccountPassword, verifyAccountPassword, isHashed } from './crypto.js';
 
-const ACCOUNT_KEY = 'taffy_account';
-const ACCOUNTS_REGISTRY_KEY = 'taffy_accounts_registry';
+const ACCOUNT_KEY = 'coffees_pos_account';
+const LEGACY_ACCOUNT_KEY = 'taffy_account';
+const ACCOUNTS_REGISTRY_KEY = 'coffees_accounts_registry';
+const LEGACY_REGISTRY_KEY = 'taffy_accounts_registry';
 
 export function getCurrentAccount() {
   try {
-    const raw = localStorage.getItem(ACCOUNT_KEY);
+    const raw = localStorage.getItem(ACCOUNT_KEY) || localStorage.getItem(LEGACY_ACCOUNT_KEY);
     if (!raw) return null;
     return JSON.parse(raw);
   } catch {
@@ -73,13 +75,14 @@ export function saveTenantInLocalRegistry(accountData, plainOrHashedPassword) {
       businessName: accountData.businessName || 'Mi Cafetería',
       email: tenantId,
       terminalName: accountData.terminalName || 'Caja Principal',
-      licenseKey: accountData.licenseKey || 'TAFFY-DEMO-2026',
+      licenseKey: accountData.licenseKey || 'COFFEESPOS-DEMO-2026',
       adminEmployeeId: accountData.adminEmployeeId || '101',
       passwordHash,
       updatedAt: new Date().toISOString()
     };
 
     localStorage.setItem(ACCOUNTS_REGISTRY_KEY, JSON.stringify(registry));
+    localStorage.setItem(LEGACY_REGISTRY_KEY, JSON.stringify(registry));
   } catch (err) {
     console.warn('No se pudo actualizar el registro local de cuentas:', err);
   }
@@ -95,7 +98,7 @@ export function verifyLocalTenantCredentials(email, passwordInput) {
       return { success: false, message: 'Ingresa tu correo y contraseña.' };
     }
 
-    const rawRegistry = localStorage.getItem(ACCOUNTS_REGISTRY_KEY);
+    const rawRegistry = localStorage.getItem(ACCOUNTS_REGISTRY_KEY) || localStorage.getItem(LEGACY_REGISTRY_KEY);
     const registry = rawRegistry ? JSON.parse(rawRegistry) : {};
     const record = registry[cleanEmail];
 
@@ -125,13 +128,13 @@ export function verifyLocalTenantCredentials(email, passwordInput) {
 // Cuenta de Pruebas Predeterminada (Inicia sesión directa en el POS)
 // ==========================================================================
 export const DEFAULT_TEST_ACCOUNT = {
-  id: 'tenant_admin_taffypos_com',
-  tenantId: 'admin@taffypos.com',
+  id: 'tenant_admin_coffeespos_com',
+  tenantId: 'admin@coffeespos.com',
   ownerName: 'Admin Pruebas',
-  businessName: 'Cafetería Taffy',
-  email: 'admin@taffypos.com',
+  businessName: 'Coffee´s Pos',
+  email: 'admin@coffeespos.com',
   terminalName: 'Caja Principal',
-  licenseKey: 'TAFFY-DEMO-2026',
+  licenseKey: 'COFFEESPOS-DEMO-2026',
   adminEmployeeId: '1',
   configuredAt: '2026-10-24T00:00:00.000Z'
 };
@@ -139,7 +142,7 @@ export const DEFAULT_TEST_ACCOUNT = {
 export const DEFAULT_TEST_EMPLOYEES = [
   {
     id: '1',
-    tenantId: 'admin@taffypos.com',
+    tenantId: 'admin@coffeespos.com',
     name: 'Administrador',
     role: 'Administrador',
     pin: '$taffy$v1$1524175862f2e77c720f7013$1dccb6065a39357fb5f1a76343c928159360cecbe59fce1b9ed89ebca718da6e',
@@ -150,7 +153,7 @@ export const DEFAULT_TEST_EMPLOYEES = [
   },
   {
     id: '2',
-    tenantId: 'admin@taffypos.com',
+    tenantId: 'admin@coffeespos.com',
     name: 'Cajero Demo',
     role: 'Cajero',
     pin: '$taffy$v1$69606b8e6824b6912cf7fafa$d39a44466f2c98f4bfd6da99f54d6a6c0f6aa049c99a240d12ab50c0e1965324',
@@ -164,7 +167,10 @@ export const DEFAULT_TEST_EMPLOYEES = [
 export function initDefaultTestState() {
   try {
     localStorage.setItem(ACCOUNT_KEY, JSON.stringify(DEFAULT_TEST_ACCOUNT));
+    localStorage.setItem(LEGACY_ACCOUNT_KEY, JSON.stringify(DEFAULT_TEST_ACCOUNT));
+    localStorage.setItem('coffees_employees_admin@coffeespos.com', JSON.stringify(DEFAULT_TEST_EMPLOYEES));
     localStorage.setItem('taffy_employees_admin@taffypos.com', JSON.stringify(DEFAULT_TEST_EMPLOYEES));
+    localStorage.setItem('coffees_current_employee', JSON.stringify(DEFAULT_TEST_EMPLOYEES[0]));
     localStorage.setItem('taffy_current_employee', JSON.stringify(DEFAULT_TEST_EMPLOYEES[0]));
     saveTenantInLocalRegistry(DEFAULT_TEST_ACCOUNT, 'admin');
     return {

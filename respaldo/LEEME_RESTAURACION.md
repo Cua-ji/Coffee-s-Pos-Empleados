@@ -1,4 +1,4 @@
-# Respaldo del Sistema de Mesas y Modo Restaurante - Taffy POS
+# Respaldo del Sistema de Mesas y Modo Restaurante - Coffee´s Pos
 
 Este directorio contiene una copia exacta y funcional de todos los archivos relacionados con la pantalla de mesas y el modo restaurante antes de ser retirados para dejar el sistema exclusivamente en **Venta Rápida (Cafetería / Mostrador)**.
 

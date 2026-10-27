@@ -35,10 +35,10 @@ export default function WelcomeScreen({ onStart, onOpenMenu, theme, businessName
       <div className="welcome-left">
         <div className="welcome-title-wrap">
           <h1 className="welcome-app-name" id="main-brand-title">
-            {businessName || 'Taffy pos'}
+            {businessName || 'Coffee´s Pos'}
           </h1>
           <p className="welcome-subtitle">
-            {businessName ? 'Taffy pos • Toma de Órdenes' : 'Toma de Órdenes'}
+            {businessName ? 'Coffee´s Pos • Toma de Órdenes' : 'Toma de Órdenes'}
           </p>
         </div>
 

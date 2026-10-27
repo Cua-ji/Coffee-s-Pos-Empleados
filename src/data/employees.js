@@ -1,11 +1,12 @@
 // ==========================================================================
-// Taffy POS - Gestión de Empleados en Frontend
+// Coffee´s Pos - Gestión de Empleados en Frontend
 // Almacenamiento local desacoplado de backend o bases de datos remotas
 // ==========================================================================
 
 import { hashEmployeePin, verifyEmployeePin, isHashed } from '../utils/crypto.js';
 
-const STORAGE_EMPLOYEES_KEY = 'taffy_employees_local';
+const STORAGE_EMPLOYEES_KEY = 'coffees_employees_local';
+const LEGACY_STORAGE_EMPLOYEES_KEY = 'taffy_employees_local';
 
 export const DEFAULT_EMPLOYEES = [
   {
@@ -42,9 +43,10 @@ export const DEFAULT_EMPLOYEES = [
 
 export function getEmployees() {
   try {
-    const raw = localStorage.getItem(STORAGE_EMPLOYEES_KEY);
+    const raw = localStorage.getItem(STORAGE_EMPLOYEES_KEY) || localStorage.getItem(LEGACY_STORAGE_EMPLOYEES_KEY);
     if (!raw) {
       localStorage.setItem(STORAGE_EMPLOYEES_KEY, JSON.stringify(DEFAULT_EMPLOYEES));
+      localStorage.setItem(LEGACY_STORAGE_EMPLOYEES_KEY, JSON.stringify(DEFAULT_EMPLOYEES));
       return [...DEFAULT_EMPLOYEES];
     }
     const parsed = JSON.parse(raw);
@@ -61,6 +63,8 @@ export function saveEmployees(list) {
   try {
     const sanitized = Array.isArray(list) ? list : [];
     localStorage.setItem(STORAGE_EMPLOYEES_KEY, JSON.stringify(sanitized));
+    localStorage.setItem(LEGACY_STORAGE_EMPLOYEES_KEY, JSON.stringify(sanitized));
+    window.dispatchEvent(new CustomEvent('coffees:employees_updated', { detail: sanitized }));
     window.dispatchEvent(new CustomEvent('taffy:employees_updated', { detail: sanitized }));
   } catch (e) {
     console.error('Error guardando empleados:', e);
@@ -183,7 +187,10 @@ export function verifyEmployeeCredentials(employee, pinInput) {
 
   // Verificación con hash si aplica
   if (isHashed(stored)) {
-    return verifyEmployeePin(input, stored, 'taffy', employee.id);
+    return (
+      verifyEmployeePin(input, stored, 'coffees_pos', employee.id) ||
+      verifyEmployeePin(input, stored, 'taffy', employee.id)
+    );
   }
 
   return false;

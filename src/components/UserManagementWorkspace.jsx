@@ -26,8 +26,12 @@ export default function UserManagementWorkspace({ currentEmployee }) {
     function handleUpdate() {
       setEmployees(getEmployees());
     }
+    window.addEventListener('coffees:employees_updated', handleUpdate);
     window.addEventListener('taffy:employees_updated', handleUpdate);
-    return () => window.removeEventListener('taffy:employees_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('coffees:employees_updated', handleUpdate);
+      window.removeEventListener('taffy:employees_updated', handleUpdate);
+    };
   }, []);
 
   function resetForm() {

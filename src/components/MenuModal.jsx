@@ -21,25 +21,28 @@ export default function MenuModal({
   const [isFullscreen, setIsFullscreen] = useState(Boolean(document.fullscreenElement));
   
   // Preferencias de impresión persistidas
-  const [ticketWidth, setTicketWidth] = useState(() => localStorage.getItem('taffy_ticket_width') || '80mm');
-  const [autoPrint, setAutoPrint] = useState(() => localStorage.getItem('taffy_auto_print') === 'true');
-  const [ticketFooter, setTicketFooter] = useState(() => localStorage.getItem('taffy_ticket_footer') || '¡Gracias por su compra! Vuelva pronto.');
+  const [ticketWidth, setTicketWidth] = useState(() => localStorage.getItem('coffees_ticket_width') || localStorage.getItem('taffy_ticket_width') || '80mm');
+  const [autoPrint, setAutoPrint] = useState(() => (localStorage.getItem('coffees_auto_print') || localStorage.getItem('taffy_auto_print')) === 'true');
+  const [ticketFooter, setTicketFooter] = useState(() => localStorage.getItem('coffees_ticket_footer') || localStorage.getItem('taffy_ticket_footer') || '¡Gracias por su compra! Vuelva pronto.');
 
   // Guardar configuración de ticket
   function handleTicketWidthChange(width) {
     setTicketWidth(width);
+    localStorage.setItem('coffees_ticket_width', width);
     localStorage.setItem('taffy_ticket_width', width);
   }
 
   function handleAutoPrintToggle() {
     const nextVal = !autoPrint;
     setAutoPrint(nextVal);
+    localStorage.setItem('coffees_auto_print', String(nextVal));
     localStorage.setItem('taffy_auto_print', String(nextVal));
   }
 
   function handleTicketFooterChange(e) {
     const val = e.target.value;
     setTicketFooter(val);
+    localStorage.setItem('coffees_ticket_footer', val);
     localStorage.setItem('taffy_ticket_footer', val);
   }
 
@@ -111,7 +114,7 @@ export default function MenuModal({
           <div>
             <h2 className="modal-title" style={{ fontSize: '1.25rem', fontWeight: 800 }}>Ajustes del Sistema</h2>
             <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
-              Terminal {account?.terminalName || 'Caja Principal'} &bull; {account?.businessName || 'Taffy POS'}
+              Terminal {account?.terminalName || 'Caja Principal'} &bull; {account?.businessName || 'Coffee´s Pos'}
             </div>
           </div>
           <button type="button" className="btn-modal-close" onClick={onClose} aria-label="Cerrar modal">
@@ -598,7 +601,7 @@ export default function MenuModal({
             alignItems: 'center'
           }}
         >
-          <span>Taffy POS v2.0</span>
+          <span>Coffee´s Pos v2.0</span>
         </div>
       </div>
     </div>

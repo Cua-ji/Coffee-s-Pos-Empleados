@@ -1,9 +1,10 @@
 // ==========================================================================
-// Taffy POS - Capa de Datos de Frontend (Almacenamiento Local en Memoria/LocalStorage)
+// Coffee´s Pos - Capa de Datos de Frontend (Almacenamiento Local en Memoria/LocalStorage)
 // Totalmente desacoplada de backend y bases de datos externas
 // ==========================================================================
 
-const STORAGE_ORDERS_KEY = 'taffy_orders_local';
+const STORAGE_ORDERS_KEY = 'coffees_orders_local';
+const LEGACY_STORAGE_ORDERS_KEY = 'taffy_orders_local';
 
 // Pedidos iniciales de demostración para visualización inmediata en Historial y Cortes
 const INITIAL_DEMO_ORDERS = [
@@ -45,7 +46,7 @@ const INITIAL_DEMO_ORDERS = [
     orderType: 'takeout',
     tableOrCustomer: 'Carlos Méndez',
     items: [
-      { id: 'p8', name: 'Hamburguesa Taffy Smash', price: 165.0, qty: 1, note: 'Término medio' },
+      { id: 'p8', name: 'Hamburguesa Coffee´s Pos Smash', price: 165.0, qty: 1, note: 'Término medio' },
       { id: 'p5', name: 'Papas Rústicas a la Francesa', price: 75.0, qty: 1, note: '' },
       { id: 'p16', name: 'Limonada Mineral de Frutos', price: 55.0, qty: 1, note: 'Poco hielo' }
     ],
@@ -109,9 +110,10 @@ export function initDB() {
 // Obtener todas las órdenes registradas
 export async function getAllOrders() {
   try {
-    const raw = localStorage.getItem(STORAGE_ORDERS_KEY);
+    const raw = localStorage.getItem(STORAGE_ORDERS_KEY) || localStorage.getItem(LEGACY_STORAGE_ORDERS_KEY);
     if (!raw) {
       localStorage.setItem(STORAGE_ORDERS_KEY, JSON.stringify(INITIAL_DEMO_ORDERS));
+      localStorage.setItem(LEGACY_STORAGE_ORDERS_KEY, JSON.stringify(INITIAL_DEMO_ORDERS));
       return [...INITIAL_DEMO_ORDERS];
     }
     const parsed = JSON.parse(raw);
@@ -144,10 +146,12 @@ export async function saveOrder(order) {
 
   try {
     localStorage.setItem(STORAGE_ORDERS_KEY, JSON.stringify(currentOrders));
+    localStorage.setItem(LEGACY_STORAGE_ORDERS_KEY, JSON.stringify(currentOrders));
   } catch (e) {
     console.warn('Error guardando orden en local:', e);
   }
 
+  window.dispatchEvent(new CustomEvent('coffees:orders_updated', { detail: normalized }));
   window.dispatchEvent(new CustomEvent('taffy:orders_updated', { detail: normalized }));
   return normalized;
 }
@@ -172,7 +176,9 @@ export async function deleteOrder(orderId) {
   const filtered = orders.filter((o) => o.id !== orderId);
   try {
     localStorage.setItem(STORAGE_ORDERS_KEY, JSON.stringify(filtered));
+    localStorage.setItem(LEGACY_STORAGE_ORDERS_KEY, JSON.stringify(filtered));
   } catch {}
+  window.dispatchEvent(new CustomEvent('coffees:orders_updated'));
   window.dispatchEvent(new CustomEvent('taffy:orders_updated'));
   return true;
 }
@@ -265,7 +271,7 @@ export async function getDailySummary() {
 export async function exportBackupJSON() {
   const orders = await getAllOrders();
   const backup = {
-    app: 'Taffy POS Frontend',
+    app: 'Coffee´s Pos Frontend',
     version: '2.0.0',
     exportedAt: new Date().toISOString(),
     totalOrders: orders.length,
@@ -294,6 +300,8 @@ export async function importBackupJSON(jsonString) {
 export function clearAllOrders() {
   try {
     localStorage.removeItem(STORAGE_ORDERS_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_ORDERS_KEY);
   } catch {}
+  window.dispatchEvent(new CustomEvent('coffees:orders_updated'));
   window.dispatchEvent(new CustomEvent('taffy:orders_updated'));
 }

@@ -1,4 +1,4 @@
-# 🤖 AGENTS.md — Instrucciones de Desarrollo Frontend (Taffy POS)
+# 🤖 AGENTS.md — Instrucciones de Desarrollo Frontend (Coffee´s Pos)
 
 Este proyecto ha sido optimizado como una **aplicación 100% Frontend (React 19 + Vite)**, desacoplada de backend y bases de datos externas.
 

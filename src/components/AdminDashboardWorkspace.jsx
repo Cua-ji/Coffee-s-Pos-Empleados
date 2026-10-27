@@ -123,7 +123,7 @@ export default function AdminDashboardWorkspace({
                 textTransform: 'uppercase'
               }}
             >
-              {account?.businessName || 'Taffy POS'}
+              {account?.businessName || 'Coffee´s Pos'}
             </div>
             <div
               style={{
@@ -365,7 +365,7 @@ export default function AdminDashboardWorkspace({
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                   <div>
                     <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                      Licencia Comercial Taffy POS
+                      Licencia Comercial Coffee´s Pos
                     </h2>
                     <p style={{ margin: '0.2rem 0 0', fontSize: '0.82rem', color: '#64748b' }}>
                       Información sobre la suscripción y derechos de uso de la terminal
@@ -465,7 +465,7 @@ export default function AdminDashboardWorkspace({
                       Versión de la App
                     </div>
                     <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', marginTop: '0.2rem' }}>
-                      Taffy POS v2.0.0
+                      Coffee´s Pos v2.0.0
                     </div>
                     <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.15rem' }}>
                       Compilación: 2026.09 (Estable)
@@ -499,7 +499,7 @@ export default function AdminDashboardWorkspace({
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.65rem', borderBottom: '1px solid #f1f5f9', fontSize: '0.88rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 500 }}>Cuenta Administradora:</span>
-                    <strong style={{ color: '#0f172a' }}>{account?.email || 'admin@taffypos.com'}</strong>
+                    <strong style={{ color: '#0f172a' }}>{account?.email || 'admin@coffeespos.com'}</strong>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 500 }}>Administrador en Sesión:</span>

@@ -1,4 +1,4 @@
-// Catálogo completo y editable de productos para Taffy POS
+// Catálogo completo y editable de productos para Coffee´s Pos
 export const MENU_CATEGORIES = [
   { id: "all", name: "Todos" },
   { id: "desayunos", name: "Desayunos" },
@@ -81,7 +81,7 @@ export const MENU_PRODUCTS = [
   {
     id: "p8",
     categoryId: "platillos",
-    name: "Hamburguesa Taffy Smash",
+    name: "Hamburguesa Coffee´s Pos Smash",
     price: 165.00,
     sku: "PLA-01",
     desc: "Doble carne angus (180g), doble cheddar, tocino caramelizado y aderezo secreto",
@@ -239,7 +239,8 @@ export const MENU_PRODUCTS = [
   }
 ];
 
-const STORAGE_KEY_PRODUCTS = 'taffy_menu_products_v1';
+const STORAGE_KEY_PRODUCTS = 'coffees_menu_products_v1';
+const LEGACY_STORAGE_KEY_PRODUCTS = 'taffy_menu_products_v1';
 
 // Obtener todas las categorías del menú
 export function getMenuCategories() {
@@ -249,9 +250,10 @@ export function getMenuCategories() {
 // Obtener lista activa de productos (desde localStorage o por defecto)
 export function getMenuProducts() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_PRODUCTS);
+    const raw = localStorage.getItem(STORAGE_KEY_PRODUCTS) || localStorage.getItem(LEGACY_STORAGE_KEY_PRODUCTS);
     if (!raw) {
       localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(MENU_PRODUCTS));
+      localStorage.setItem(LEGACY_STORAGE_KEY_PRODUCTS, JSON.stringify(MENU_PRODUCTS));
       return [...MENU_PRODUCTS];
     }
     const parsed = JSON.parse(raw);
@@ -269,6 +271,8 @@ export function getMenuProducts() {
 export function saveMenuProducts(productsList) {
   try {
     localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(productsList));
+    localStorage.setItem(LEGACY_STORAGE_KEY_PRODUCTS, JSON.stringify(productsList));
+    window.dispatchEvent(new CustomEvent('coffees:menu_updated', { detail: productsList }));
     window.dispatchEvent(new CustomEvent('taffy:menu_updated', { detail: productsList }));
   } catch (e) {
     console.error('Error al guardar productos del menú:', e);

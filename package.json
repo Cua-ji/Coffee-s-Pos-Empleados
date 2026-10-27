@@ -1,5 +1,5 @@
 {
-  "name": "taffy-pos",
+  "name": "coffees-pos",
   "version": "2.0.0",
   "private": true,
   "type": "module",
@@ -18,8 +18,8 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
-  "description": "Taffy POS",
-  "author": "Taffy POS",
+  "description": "Coffee´s Pos",
+  "author": "Coffee´s Pos",
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.1",
     "electron": "^44.4.5",
@@ -27,9 +27,9 @@
     "vite": "^8.3.1"
   },
   "build": {
-    "appId": "com.taffypos.desktop",
-    "productName": "Taffy POS",
-    "copyright": "Copyright © 2026 Taffy POS",
+    "appId": "com.coffeespos.desktop",
+    "productName": "Coffee´s Pos",
+    "copyright": "Copyright © 2026 Coffee´s Pos",
     "directories": {
       "output": "release"
     },
@@ -67,7 +67,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Taffy POS"
+      "shortcutName": "Coffee´s Pos"
     }
   }
 }

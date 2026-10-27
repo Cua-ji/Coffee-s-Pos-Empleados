@@ -1,5 +1,5 @@
 
-const DB_NAME = 'TaffyPosDatabase';
+const DB_NAME = 'CoffeesPosDatabase';
 const DB_VERSION = 1;
 const STORE_ORDERS = 'orders';
 
@@ -23,7 +23,7 @@ export function initDB() {
 
     request.onsuccess = (event) => {
       dbInstance = event.target.result;
-      console.log('✅ Base de datos IndexedDB Taffy POS inicializada correctamente');
+      console.log('✅ Base de datos IndexedDB Coffee´s Pos inicializada correctamente');
       resolve(dbInstance);
     };
 
@@ -146,6 +146,7 @@ export function deleteOrder(orderId) {
     }
     let local = getOrdersFromLocalStorage();
     local = local.filter(o => o.id !== orderId);
+    localStorage.setItem('coffees_orders_backup', JSON.stringify(local));
     localStorage.setItem('taffy_orders_backup', JSON.stringify(local));
     resolve(true);
   });
@@ -200,7 +201,7 @@ export async function getDailySummary() {
 export async function exportBackupJSON() {
   const orders = await getAllOrders();
   const backup = {
-    app: 'Taffy POS',
+    app: 'Coffee´s Pos',
     version: '1.0.0',
     exportedAt: new Date().toISOString(),
     totalOrders: orders.length,
@@ -235,6 +236,7 @@ function backupToLocalStorage(order) {
     } else {
       list.unshift(order);
     }
+    localStorage.setItem('coffees_orders_backup', JSON.stringify(list));
     localStorage.setItem('taffy_orders_backup', JSON.stringify(list));
   } catch (e) {
     console.warn('Error al guardar en localStorage:', e);
@@ -243,7 +245,7 @@ function backupToLocalStorage(order) {
 
 function getOrdersFromLocalStorage() {
   try {
-    const raw = localStorage.getItem('taffy_orders_backup');
+    const raw = localStorage.getItem('coffees_orders_backup') || localStorage.getItem('taffy_orders_backup');
     if (!raw) return [];
     return JSON.parse(raw);
   } catch {

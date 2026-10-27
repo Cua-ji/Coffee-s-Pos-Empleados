@@ -44,7 +44,7 @@ export default function ConfirmModal({
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
-          animation: 'taffyModalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+          animation: 'coffeesModalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
         onClick={(e) => e.stopPropagation()}
       >

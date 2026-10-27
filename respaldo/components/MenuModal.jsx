@@ -162,7 +162,7 @@ export default function MenuModal({
           </div>
 
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', fontSize: '0.8rem', color: '#94a3b8', textAlign: 'center' }}>
-            Taffy POS &bull; Terminal de Punto de Venta
+            Coffee´s Pos &bull; Terminal de Punto de Venta
           </div>
         </div>
       </div>

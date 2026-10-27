@@ -69,7 +69,7 @@ export default function PosHeader({
     <header className="pos-top-nav">
       <div className="pos-nav-left">
         <h1 className="pos-logo-text" style={{ margin: 0 }}>
-          Taffy pos
+          Coffee´s Pos
         </h1>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>

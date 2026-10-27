@@ -9,7 +9,7 @@ function createWindow() {
     height: 800,
     minWidth: 1024,
     minHeight: 680,
-    title: 'Taffy POS',
+    title: 'Coffee´s Pos',
     backgroundColor: '#0f172a',
     show: false, // Don't show until ready-to-show to prevent white flash
     webPreferences: {
@@ -20,7 +20,7 @@ function createWindow() {
     }
   });
 
-  // Keep window title strictly as 'Taffy POS'
+  // Keep window title strictly as 'Coffee´s Pos'
   mainWindow.on('page-title-updated', (e) => {
     e.preventDefault();
   });
@@ -55,17 +55,17 @@ function createWindow() {
   const isMac = process.platform === 'darwin';
   const menuTemplate = [
     ...(isMac ? [{
-      label: 'Taffy POS',
+      label: 'Coffee´s Pos',
       submenu: [
-        { role: 'about', label: 'Acerca de Taffy POS' },
+        { role: 'about', label: 'Acerca de Coffee´s Pos' },
         { type: 'separator' },
         { role: 'services', label: 'Servicios' },
         { type: 'separator' },
-        { role: 'hide', label: 'Ocultar Taffy POS' },
+        { role: 'hide', label: 'Ocultar Coffee´s Pos' },
         { role: 'hideOthers', label: 'Ocultar Otros' },
         { role: 'unhide', label: 'Mostrar Todo' },
         { type: 'separator' },
-        { role: 'quit', label: 'Salir de Taffy POS' }
+        { role: 'quit', label: 'Salir de Coffee´s Pos' }
       ]
     }] : []),
     {

@@ -29,8 +29,12 @@ export default function MenuManagementWorkspace() {
     function handleUpdate() {
       setProducts(getMenuProducts());
     }
+    window.addEventListener('coffees:menu_updated', handleUpdate);
     window.addEventListener('taffy:menu_updated', handleUpdate);
-    return () => window.removeEventListener('taffy:menu_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('coffees:menu_updated', handleUpdate);
+      window.removeEventListener('taffy:menu_updated', handleUpdate);
+    };
   }, []);
 
   function resetForm() {

@@ -30,8 +30,12 @@ export default function OrderingWorkspace({
     function handleMenuUpdate() {
       setProductsList(getMenuProducts());
     }
+    window.addEventListener('coffees:menu_updated', handleMenuUpdate);
     window.addEventListener('taffy:menu_updated', handleMenuUpdate);
-    return () => window.removeEventListener('taffy:menu_updated', handleMenuUpdate);
+    return () => {
+      window.removeEventListener('coffees:menu_updated', handleMenuUpdate);
+      window.removeEventListener('taffy:menu_updated', handleMenuUpdate);
+    };
   }, []);
 
   // Filter products

@@ -5,14 +5,19 @@ export default function ReceiptModal({ isOpen, onClose, order, onStartNewOrder }
 
   const savedAccount = (() => {
     try {
-      return JSON.parse(localStorage.getItem('taffy_account') || localStorage.getItem('taffy_business_account') || '{}');
+      return JSON.parse(
+        localStorage.getItem('coffees_pos_account') ||
+        localStorage.getItem('taffy_account') ||
+        localStorage.getItem('taffy_business_account') ||
+        '{}'
+      );
     } catch {
       return {};
     }
   })();
-  const businessName = savedAccount.businessName || 'Taffy POS';
-  const customFooter = localStorage.getItem('taffy_ticket_footer') || '¡GRACIAS POR SU COMPRA!\nFavor de conservar este ticket';
-  const is58mm = localStorage.getItem('taffy_ticket_width') === '58mm';
+  const businessName = savedAccount.businessName || 'Coffee´s Pos';
+  const customFooter = localStorage.getItem('coffees_pos_ticket_footer') || localStorage.getItem('taffy_ticket_footer') || '¡GRACIAS POR SU COMPRA!\nFavor de conservar este ticket';
+  const is58mm = (localStorage.getItem('coffees_pos_ticket_width') || localStorage.getItem('taffy_ticket_width')) === '58mm';
 
   const dateObj = new Date(order.timestamp || Date.now());
   const dateFormatted = dateObj.toLocaleDateString('es-MX', {
@@ -54,8 +59,8 @@ export default function ReceiptModal({ isOpen, onClose, order, onStartNewOrder }
             <h3 style={{ fontSize: '1.3rem', fontWeight: 900, margin: '0 0 0.2rem', fontFamily: 'var(--font-outfit, sans-serif)' }}>
               {businessName.toUpperCase()}
             </h3>
-            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Taffy pos &bull; Terminal de Venta</div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>RFC: TAF-260927-POS</div>
+            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Coffee´s Pos &bull; Terminal de Venta</div>
+            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>RFC: CFP-260927-POS</div>
           </div>
 
           <div style={{ borderTop: '1px dashed #94a3b8', borderBottom: '1px dashed #94a3b8', padding: '0.5rem 0', margin: '0.5rem 0', fontSize: '0.78rem' }}>

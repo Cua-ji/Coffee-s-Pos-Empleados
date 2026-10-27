@@ -1,7 +1,8 @@
-// Base de datos de empleados del sistema Taffy POS
+// Base de datos de empleados del sistema Coffee´s Pos
 // Soporta altas, bajas y modificaciones con persistencia local
 
-const STORAGE_KEY_EMPLOYEES = 'taffy_employees_v1';
+const STORAGE_KEY_EMPLOYEES = 'coffees_employees_v1';
+const LEGACY_STORAGE_KEY_EMPLOYEES = 'taffy_employees_v1';
 
 export const DEFAULT_EMPLOYEES = [
   {
@@ -27,9 +28,10 @@ export const DEFAULT_EMPLOYEES = [
 // Obtener la lista activa de empleados
 export function getEmployees() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_EMPLOYEES);
+    const raw = localStorage.getItem(STORAGE_KEY_EMPLOYEES) || localStorage.getItem(LEGACY_STORAGE_KEY_EMPLOYEES);
     if (!raw) {
       localStorage.setItem(STORAGE_KEY_EMPLOYEES, JSON.stringify(DEFAULT_EMPLOYEES));
+      localStorage.setItem(LEGACY_STORAGE_KEY_EMPLOYEES, JSON.stringify(DEFAULT_EMPLOYEES));
       return [...DEFAULT_EMPLOYEES];
     }
     const list = JSON.parse(raw);
@@ -47,6 +49,8 @@ export function getEmployees() {
 function saveEmployees(list) {
   try {
     localStorage.setItem(STORAGE_KEY_EMPLOYEES, JSON.stringify(list));
+    localStorage.setItem(LEGACY_STORAGE_KEY_EMPLOYEES, JSON.stringify(list));
+    window.dispatchEvent(new CustomEvent('coffees:employees_updated', { detail: list }));
     window.dispatchEvent(new CustomEvent('taffy:employees_updated', { detail: list }));
   } catch (e) {
     console.error('Error guardando empleados:', e);

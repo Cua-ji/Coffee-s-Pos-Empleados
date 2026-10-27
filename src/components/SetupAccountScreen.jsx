@@ -33,7 +33,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
 
   // Paso 4: Licencia
   const [licenseType, setLicenseType] = useState('demo'); // 'demo' | 'custom'
-  const [licenseKey, setLicenseKey] = useState('TAFFY-DEMO-2026');
+  const [licenseKey, setLicenseKey] = useState('COFFEESPOS-DEMO-2026');
 
 
   // Paso 5: Menú y CSV
@@ -149,7 +149,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'plantilla_menu_taffy.csv');
+    link.setAttribute('download', 'plantilla_menu_coffees_pos.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -238,7 +238,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
       businessName: businessName.trim(),
       email: cleanEmail,
       terminalName: terminalName.trim() || 'Caja Principal',
-      licenseKey: licenseType === 'custom' ? licenseKey.trim() : 'TAFFY-DEMO-2026',
+      licenseKey: licenseType === 'custom' ? licenseKey.trim() : 'COFFEESPOS-DEMO-2026',
       adminEmployeeId: cleanAdminId,
       configuredAt: new Date().toISOString()
     };
@@ -276,10 +276,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
     }
 
     // Configuración local del asistente
-    localStorage.setItem('taffy_account', JSON.stringify(accountData));
-    saveTenantInLocalRegistry(accountData, hashedAccountPassword);
-
-    // Guardar sesión de cuenta y registro local con hash de contraseña
+    localStorage.setItem('coffees_pos_account', JSON.stringify(accountData));
     localStorage.setItem('taffy_account', JSON.stringify(accountData));
     saveTenantInLocalRegistry(accountData, hashedAccountPassword);
 
@@ -338,6 +335,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
             configuredAt: new Date().toISOString()
           };
 
+      localStorage.setItem('coffees_pos_account', JSON.stringify(accountData));
       localStorage.setItem('taffy_account', JSON.stringify(accountData));
       saveTenantInLocalRegistry(accountData, hashedInputPassword);
 
@@ -397,7 +395,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
             </svg>
           </div>
           <h1 style={{ fontSize: '1.9rem', fontWeight: 900, color: '#0f172a', margin: '0 0 0.25rem', letterSpacing: '-0.03em' }}>
-            Taffy pos
+            Coffee´s Pos
           </h1>
           <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}>
             Punto de Venta para Cafeterías &bull; Configuración Inicial
@@ -517,7 +515,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
                 cursor: 'pointer'
               }}
             >
-              Ya tengo cuenta en Taffy POS
+              Ya tengo cuenta en Coffee´s Pos
             </button>
 
             <button
@@ -527,6 +525,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
                 setErrorMsg('');
                 const { account: testAcc } = initDefaultTestState();
                 try {
+                  localStorage.removeItem('coffees_unlinked_manual');
                   localStorage.removeItem('taffy_unlinked_manual');
                 } catch {}
                 onAccountConfigured(testAcc);
@@ -667,7 +666,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
               </label>
               <input
                 type="text"
-                placeholder="ej. Café Central, La Taza Dorada, Taffy Coffee"
+                placeholder="ej. Café Central, La Taza Dorada, Coffee´s Pos"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleNextStep()}
@@ -853,13 +852,13 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
         )}
 
         {/* ============================================================== */}
-        {/* ASISTENTE GUIADO: PASO 4 - LICENCIA DE TAFFY POS               */}
+        {/* ASISTENTE GUIADO: PASO 4 - LICENCIA DE COFFEE´S POS            */}
         {/* ============================================================== */}
         {screenMode === 'wizard' && currentStep === 4 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
             <div>
               <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', margin: '0 0 0.4rem' }}>
-                ¿Cuentas con una licencia para Taffy POS?
+                ¿Cuentas con una licencia para Coffee´s Pos?
               </h2>
               <p style={{ margin: 0, color: '#64748b', fontSize: '0.88rem' }}>
                 Selecciona si ya tienes un código de activación o deseas comenzar en modo demo.
@@ -870,7 +869,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
               <div
                 onClick={() => {
                   setLicenseType('demo');
-                  setLicenseKey('TAFFY-DEMO-2026');
+                  setLicenseKey('COFFEESPOS-DEMO-2026');
                 }}
                 style={{
                   padding: '1rem',
@@ -895,7 +894,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
                     Usar Licencia de Demostración (30 días)
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                    Clave automática: TAFFY-DEMO-2026 (Ideal para pruebas y presentación)
+                    Clave automática: COFFEESPOS-DEMO-2026 (Ideal para pruebas y presentación)
                   </div>
                 </div>
               </div>
@@ -934,7 +933,7 @@ export default function SetupAccountScreen({ onAccountConfigured, audioEnabled =
                 <div style={{ marginTop: '0.2rem' }}>
                   <input
                     type="text"
-                    placeholder="ej. TAFFY-PRO-XXXX-XXXX"
+                    placeholder="ej. COFFEESPOS-PRO-XXXX-XXXX"
                     value={licenseKey}
                     onChange={(e) => setLicenseKey(e.target.value)}
                     autoFocus

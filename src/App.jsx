@@ -31,9 +31,12 @@ export default function App() {
   // Estado de Cuenta / Multi-Tenant Onboarding (Carga o inicializa cuenta de prueba)
   const [account, setAccount] = useState(() => {
     try {
-      const saved = localStorage.getItem('taffy_account');
+      const saved = localStorage.getItem('coffees_pos_account') || localStorage.getItem('taffy_account');
       if (saved) return JSON.parse(saved);
-      if (localStorage.getItem('taffy_unlinked_manual') === 'true') {
+      if (
+        localStorage.getItem('coffees_unlinked_manual') === 'true' ||
+        localStorage.getItem('taffy_unlinked_manual') === 'true'
+      ) {
         return null;
       }
       const { account: defaultAcc } = initDefaultTestState();
@@ -46,9 +49,12 @@ export default function App() {
   // Employee Authentication State (Sesión persistente directa para pruebas)
   const [currentEmployee, setCurrentEmployee] = useState(() => {
     try {
-      const saved = localStorage.getItem('taffy_current_employee');
+      const saved = localStorage.getItem('coffees_current_employee') || localStorage.getItem('taffy_current_employee');
       if (saved) return JSON.parse(saved);
-      if (localStorage.getItem('taffy_unlinked_manual') === 'true') {
+      if (
+        localStorage.getItem('coffees_unlinked_manual') === 'true' ||
+        localStorage.getItem('taffy_unlinked_manual') === 'true'
+      ) {
         return null;
       }
       return DEFAULT_TEST_EMPLOYEES[0];
@@ -60,11 +66,14 @@ export default function App() {
   // Navigation State (Acceso directo a POS en cuenta de prueba o Setup si fue desvinculada)
   const [activeScreen, setActiveScreen] = useState(() => {
     try {
-      const hasAccount = localStorage.getItem('taffy_account');
-      if (!hasAccount && localStorage.getItem('taffy_unlinked_manual') === 'true') {
+      const hasAccount = localStorage.getItem('coffees_pos_account') || localStorage.getItem('taffy_account');
+      const isUnlinked =
+        localStorage.getItem('coffees_unlinked_manual') === 'true' ||
+        localStorage.getItem('taffy_unlinked_manual') === 'true';
+      if (!hasAccount && isUnlinked) {
         return 'setup';
       }
-      const savedEmp = localStorage.getItem('taffy_current_employee');
+      const savedEmp = localStorage.getItem('coffees_current_employee') || localStorage.getItem('taffy_current_employee');
       return savedEmp ? 'pos' : 'welcome';
     } catch {
       return 'setup';
@@ -74,8 +83,8 @@ export default function App() {
   const [adminAuthPendingTab, setAdminAuthPendingTab] = useState(null);
 
   // Preference Settings
-  const [theme, setTheme] = useState(() => localStorage.getItem('taffy_theme') || 'theme-nordic');
-  const [audioEnabled, setAudioEnabled] = useState(() => localStorage.getItem('taffy_audio') !== 'false');
+  const [theme, setTheme] = useState(() => localStorage.getItem('coffees_theme') || localStorage.getItem('taffy_theme') || 'theme-nordic');
+  const [audioEnabled, setAudioEnabled] = useState(() => (localStorage.getItem('coffees_audio') ?? localStorage.getItem('taffy_audio')) !== 'false');
 
   // In-App Toast & Confirmation Modal State
   const [toast, setToast] = useState(null);
@@ -146,30 +155,38 @@ export default function App() {
       }
     }
 
+    window.addEventListener('coffees:toast', handleToastEvent);
     window.addEventListener('taffy:toast', handleToastEvent);
+    window.addEventListener('coffees:confirm', handleConfirmEvent);
     window.addEventListener('taffy:confirm', handleConfirmEvent);
     return () => {
+      window.removeEventListener('coffees:toast', handleToastEvent);
       window.removeEventListener('taffy:toast', handleToastEvent);
+      window.removeEventListener('coffees:confirm', handleConfirmEvent);
       window.removeEventListener('taffy:confirm', handleConfirmEvent);
     };
   }, []);
 
   // Save theme to localStorage
   useEffect(() => {
+    localStorage.setItem('coffees_theme', theme);
     localStorage.setItem('taffy_theme', theme);
   }, [theme]);
 
   // Save audio preference
   useEffect(() => {
+    localStorage.setItem('coffees_audio', String(audioEnabled));
     localStorage.setItem('taffy_audio', String(audioEnabled));
   }, [audioEnabled]);
 
   // Account Onboarding handlers
   function handleAccountConfigured(accountData) {
     try {
+      localStorage.removeItem('coffees_unlinked_manual');
       localStorage.removeItem('taffy_unlinked_manual');
     } catch {}
     setAccount(accountData);
+    localStorage.setItem('coffees_pos_account', JSON.stringify(accountData));
     localStorage.setItem('taffy_account', JSON.stringify(accountData));
     setActiveScreen('welcome');
     showToast(`Terminal vinculada con éxito a ${accountData.businessName || 'tu cafetería'}`, 'success');
@@ -184,18 +201,27 @@ export default function App() {
       isDestructive: true,
       onConfirm: () => {
         try {
+          localStorage.setItem('coffees_unlinked_manual', 'true');
           localStorage.setItem('taffy_unlinked_manual', 'true');
         } catch {}
         const oldTenant = account?.tenantId || (account?.email ? account.email.toLowerCase().trim() : null);
         if (oldTenant) {
+          localStorage.removeItem(`coffees_employees_${oldTenant}`);
           localStorage.removeItem(`taffy_employees_${oldTenant}`);
+          localStorage.removeItem(`coffees_menu_products_${oldTenant}`);
           localStorage.removeItem(`taffy_menu_products_${oldTenant}`);
+          localStorage.removeItem(`coffees_orders_backup_${oldTenant}`);
           localStorage.removeItem(`taffy_orders_backup_${oldTenant}`);
         }
+        localStorage.removeItem('coffees_employees_local');
         localStorage.removeItem('taffy_employees_v1');
+        localStorage.removeItem('coffees_menu_products_local');
         localStorage.removeItem('taffy_menu_products_v1');
+        localStorage.removeItem('coffees_orders_local');
         localStorage.removeItem('taffy_orders_backup');
+        localStorage.removeItem('coffees_pos_account');
         localStorage.removeItem('taffy_account');
+        localStorage.removeItem('coffees_current_employee');
         localStorage.removeItem('taffy_current_employee');
         setAccount(null);
         setCurrentEmployee(null);
@@ -221,6 +247,7 @@ export default function App() {
 
   function handleLoginSuccess(emp) {
     setCurrentEmployee(emp);
+    localStorage.setItem('coffees_current_employee', JSON.stringify(emp));
     localStorage.setItem('taffy_current_employee', JSON.stringify(emp));
     setActiveScreen('pos');
     setActivePosTab('order');
@@ -230,6 +257,7 @@ export default function App() {
     playHapticSound('click', audioEnabled);
 
     function doLogout() {
+      localStorage.removeItem('coffees_current_employee');
       localStorage.removeItem('taffy_current_employee');
       setCurrentEmployee(null);
       setCart([]);

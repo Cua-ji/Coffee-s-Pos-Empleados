@@ -1,4 +1,4 @@
-# ☕ TAFFY POS — Frontend Interactivo (React 19 + Vite)
+# ☕ COFFEE´S POS — Frontend Interactivo (React 19 + Vite)
 
 Sistema de punto de venta (POS) para cafeterías y restaurantes, enfocado en una experiencia de usuario rápida, táctil e intuitiva. 
 Todo el proyecto opera **100% en el Frontend** sin necesidad de bases de datos externas ni servidores backend.

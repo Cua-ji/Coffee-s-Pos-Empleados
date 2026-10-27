@@ -1,9 +1,10 @@
 // ==========================================================================
-// Taffy POS - Catálogo y Gestión del Menú en Frontend
+// Coffee´s Pos - Catálogo y Gestión del Menú en Frontend
 // Almacenamiento local desacoplado de backend o bases de datos remotas
 // ==========================================================================
 
-const STORAGE_MENU_KEY = 'taffy_menu_products_local';
+const STORAGE_MENU_KEY = 'coffees_menu_products_local';
+const LEGACY_STORAGE_MENU_KEY = 'taffy_menu_products_local';
 
 export const MENU_CATEGORIES = [
   { id: "all", name: "Todos" },
@@ -87,7 +88,7 @@ export const MENU_PRODUCTS = [
   {
     id: "p8",
     categoryId: "platillos",
-    name: "Hamburguesa Taffy Smash",
+    name: "Hamburguesa Coffee´s Pos Smash",
     price: 165.00,
     sku: "PLA-01",
     desc: "Doble carne angus (180g), doble cheddar, tocino caramelizado y aderezo secreto",
@@ -251,9 +252,10 @@ export function getMenuCategories() {
 
 export function getMenuProducts() {
   try {
-    const raw = localStorage.getItem(STORAGE_MENU_KEY);
+    const raw = localStorage.getItem(STORAGE_MENU_KEY) || localStorage.getItem(LEGACY_STORAGE_MENU_KEY);
     if (!raw) {
       localStorage.setItem(STORAGE_MENU_KEY, JSON.stringify(MENU_PRODUCTS));
+      localStorage.setItem(LEGACY_STORAGE_MENU_KEY, JSON.stringify(MENU_PRODUCTS));
       return [...MENU_PRODUCTS];
     }
     const parsed = JSON.parse(raw);
@@ -270,6 +272,8 @@ export function saveMenuProducts(productsList) {
   try {
     const cleanList = Array.isArray(productsList) ? productsList : [];
     localStorage.setItem(STORAGE_MENU_KEY, JSON.stringify(cleanList));
+    localStorage.setItem(LEGACY_STORAGE_MENU_KEY, JSON.stringify(cleanList));
+    window.dispatchEvent(new CustomEvent('coffees:menu_updated', { detail: cleanList }));
     window.dispatchEvent(new CustomEvent('taffy:menu_updated', { detail: cleanList }));
   } catch (e) {
     console.error('Error al guardar productos del menú:', e);

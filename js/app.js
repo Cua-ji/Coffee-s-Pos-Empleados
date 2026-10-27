@@ -817,10 +817,10 @@ function renderReceiptPreview(order) {
 
   paper.innerHTML = `
     <div class="receipt-header">
-      <div class="receipt-store-name">TAFFY POS</div>
+      <div class="receipt-store-name">COFFEE´S POS</div>
       <div class="receipt-meta">
         CAFETERÍA & RESTAURANTE GOURMET<br>
-        RFC: TAF-260926-POS<br>
+        RFC: CFP-260926-POS<br>
         FECHA: ${dateFormatted}<br>
         TICKET: #${order.ticketNumber} &bull; CAJERO: ${order.employeeName}<br>
         <strong>${order.orderType === 'dine-in' ? '🍽️ COMER AQUÍ' : '🛍️ PARA LLEVAR'} &bull; ${order.tableOrCustomer || ''}</strong>
@@ -1026,7 +1026,7 @@ async function handleExportBackup() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `TaffyPOS_Respaldo_${new Date().toISOString().split('T')[0]}.json`;
+  a.download = `CoffeesPos_Respaldo_${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -1101,15 +1101,16 @@ function closeAllModals() {
 // ==========================================================================
 
 // Función global accesible inmediatamente para empezar
-window.startTaffyPos = function() {
+window.startCoffeesPos = function() {
   playKeyHaptic('click');
   state.currentEmployeeId = '';
   updateEmployeeIdDisplay();
   switchScreen('screen-employee-id');
 };
+window.startTaffyPos = window.startCoffeesPos;
 
 function initApp() {
-  console.log('🚀 Taffy POS inicializando...');
+  console.log('🚀 Coffee´s Pos inicializando...');
 
   // 1. Reloj en vivo de inmediato
   updateLiveClock();
@@ -1127,7 +1128,7 @@ function initApp() {
   if (btnStart) {
     btnStart.addEventListener('click', (e) => {
       e.preventDefault();
-      window.startTaffyPos();
+      window.startCoffeesPos();
     });
     btnStart.addEventListener('pointerdown', () => {
       playKeyHaptic('click');
@@ -1415,13 +1416,14 @@ function initApp() {
   }
 
   // Selector de tema
-  const savedTheme = localStorage.getItem('taffy_theme') || 'theme-nordic';
+  const savedTheme = localStorage.getItem('coffees_theme') || localStorage.getItem('taffy_theme') || 'theme-nordic';
   applyTheme(savedTheme);
 
   document.querySelectorAll('.btn-theme-option').forEach(btn => {
     btn.addEventListener('click', () => {
       const theme = btn.dataset.theme;
       applyTheme(theme);
+      localStorage.setItem('coffees_theme', theme);
       localStorage.setItem('taffy_theme', theme);
       playKeyHaptic('click');
     });
